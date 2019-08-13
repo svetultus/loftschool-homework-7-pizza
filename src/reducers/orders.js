@@ -21,9 +21,14 @@ export default (state = [], action) => {
       );
       return newState;
     case 'MOVE_ORDER_NEXT':
-      currentPosition = newState[action.payload - 1].position;
+      let index = action.payload - 1;
+
+      currentPosition = newState[index].position;
       newPosition = position[currentPosition].next;
-      if (newPosition) newState[action.payload - 1].position = newPosition;
+      if (newPosition === 'finish') {
+        if (newState[index].ingredients.length)
+          newState[index].position = newPosition;
+      } else if (newPosition !== null) newState[index].position = newPosition;
 
       return newState;
     case 'MOVE_ORDER_BACK':
@@ -50,7 +55,7 @@ const position = {
   conveyor_1: { next: 'conveyor_2', prev: null },
   conveyor_2: { next: 'conveyor_3', prev: 'conveyor_1' },
   conveyor_3: { next: 'conveyor_4', prev: 'conveyor_2' },
-  conveyor_4: { next: null, prev: 'conveyor_3' }
+  conveyor_4: { next: 'finish', prev: 'conveyor_3' }
 };
 
 export const getOrdersFor = (state, position) =>

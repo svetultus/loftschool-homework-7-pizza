@@ -21,7 +21,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache"
   },
   "devDependencies": {
     "cypress": "^3.1.0",
@@ -31,10 +32,5 @@
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-react-perf": "^2.0.9"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
 }
