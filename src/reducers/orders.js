@@ -8,8 +8,16 @@ import { ADD_INGREDIENT } from '../actions/ingredients';
 // Он поможет понять, какие значения должен возвращать редьюсер.
 
 export default (state = [], action) => {
-  const newState = state.slice();
-  let currentPosition, newPosition;
+  const newState = state.map(item => {
+    let newItem = {};
+
+    for (let key in item) {
+      newItem[key] = item[key].map ? item[key].slice() : item[key];
+    }
+    return newItem;
+  });
+
+  let currentPosition, newPosition, index, order;
 
   switch (action.type) {
     case 'CREATE_NEW_ORDER':
@@ -20,31 +28,41 @@ export default (state = [], action) => {
         })
       );
       return newState;
+
     case 'MOVE_ORDER_NEXT':
-      let index = action.payload - 1;
+      index = action.payload - 1;
+      order = newState[index];
 
-      currentPosition = newState[index].position;
+      currentPosition = order.position;
       newPosition = position[currentPosition].next;
+
       if (newPosition === 'finish') {
-        if (newState[index].ingredients.length)
-          newState[index].position = newPosition;
-      } else if (newPosition !== null) newState[index].position = newPosition;
+        if (order.ingredients.length >= order.recipe.length)
+          order.position = newPosition;
+      } else if (newPosition !== null) order.position = newPosition;
 
       return newState;
+
     case 'MOVE_ORDER_BACK':
-      currentPosition = newState[action.payload - 1].position;
+      index = action.payload - 1;
+      order = newState[index];
+
+      currentPosition = order.position;
       newPosition = position[currentPosition].prev;
-      if (newPosition)
-        newState[action.payload - 1].position = position[currentPosition].prev;
+      if (newPosition) order.position = position[currentPosition].prev;
 
       return newState;
+
     case 'ADD_INGREDIENT':
       const { from, ingredient } = action.payload;
 
       newState.forEach(order => {
-        if (order.position === from) order.ingredients.push(ingredient);
+        if (order.position === from && order.recipe.indexOf(ingredient) !== -1)
+          order.ingredients.push(ingredient);
       });
+
       return newState;
+
     default:
       return state;
   }
