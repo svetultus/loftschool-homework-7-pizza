@@ -24,10 +24,12 @@ describe('CREATE_NEW_ORDER создает новый заказ', () => {
 });
 
 describe('MOVE_ORDER_NEXT двигает position заказа', () => {
+  debugger;
   const state0 = orders(undefined, 'test');
   const state1 = orders(state0, createNewOrder(1, ['test']));
 
   const state2 = orders(state1, moveOrderNext(1));
+
   it('clients -> conveyor_1', () => {
     expect(state2[0].position).toBe('conveyor_1');
   });
@@ -64,5 +66,4 @@ describe('MOVE_ORDER_BACK двигает position заказа', () => {
   it('conveyor_2 -> conveyor_1', () => {
     expect(state8[0].position).toBe('conveyor_1');
   });
-
 });
